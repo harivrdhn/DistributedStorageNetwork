@@ -1,0 +1,138 @@
+
+option optimize_for = SPEED;
+option java_package = "eye";
+
+message Finger {
+	required int32 number = 1;
+	required string tag = 2;
+}
+
+message NameSpace {
+	// internally created or supplied by caller
+	optional int64 id = 1; 
+	
+	required string name = 2;
+	optional string desc = 3;
+	optional int64 created = 4;
+	optional int64 last_modified = 5;
+	optional string owner = 6;
+}
+
+message NameValueSet {
+	required NodeType node_type = 1;
+    optional string name = 2;
+    optional string value = 3;
+    repeated NameValueSet node = 4;
+    
+    enum NodeType {
+    	NODE = 1;
+    	VALUE = 2;
+    }
+}
+
+message Document {
+    optional string name_space = 1;
+    optional int64 id = 2;
+    required NameValueSet document = 3;
+}
+
+message DocumentSet {
+	repeated Document documents = 1;
+}
+
+message NameSpaceSet {
+	repeated NameSpace spaces = 1;
+}
+
+message RoutingPath {
+    required string node = 1;
+    required int64 time = 2;
+}
+
+message Header {  
+    required Routing routing_id = 1;
+    required string originator = 2;
+    optional string tag = 3;
+    optional int64 time = 4;
+    
+    // while we can use extensions, it is not a clean 
+    // inheritance implementation and since requests
+    // and responses differ only by these two fields,
+    // a new message is not created.
+    optional ReplyStatus reply_code = 5;
+    optional string reply_msg = 6;
+    
+    // the path a message takes - to handle cycles in the network
+    repeated RoutingPath path = 7;
+
+    // if the message is for a specific node, this will be set
+    optional string toNode = 8;
+
+    enum Routing {
+        FINGER = 2;
+        STATS = 3;
+        NAMESPACEADD = 10;
+        NAMESPACELIST = 11;
+        NAMESPACEUPDATE = 12;
+        NAMESPACEREMOVE =13;
+        DOCADD = 20;
+        DOCFIND = 21;
+        DOCUPDATE = 22;
+        DOCREMOVE = 23;
+        }
+        
+     enum ReplyStatus {
+     	SUCCESS = 1;
+     	FAILURE = 2;
+     	NOAUTH = 3;
+     	MISSINGARG = 4;
+     	NOCONNECTION = 5;
+     	}
+}
+
+message Payload {
+    optional Finger finger = 1;
+    optional Document doc = 2;
+    optional NameSpace space = 3;
+}
+
+message PayloadReply {
+	optional Finger finger = 1;
+    repeated Document docs = 2;
+    repeated NameSpace spaces = 3;
+    optional Document stats = 4;
+}
+
+message Request {
+    required Header header = 1;
+    required Payload body = 2;
+}
+
+message Response {
+    required Header header = 1;
+	required PayloadReply body = 2;
+}
+
+message Heartbeat {
+	required string nodeId = 1;
+	required int64 timeRef = 2;
+}
+
+message Network {
+	required string nodeId = 1;
+	required Action action = 2;
+
+	enum Action {
+		NODEJOIN = 1;
+		NODELEAVE = 2;
+		NODEDEAD = 3;
+		MAP = 55;
+		ANNOUNCE = 56;
+		SHUTDOWN = 999;
+	}
+}
+
+message Management {
+	optional Network graph = 1;
+	optional Heartbeat beat = 2;
+}	
