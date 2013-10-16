@@ -2,6 +2,7 @@ package poke.client.util;
 
 import poke.util.PrintNode;
 import eye.Comm.Document;
+import eye.Comm.File;
 import eye.Comm.Finger;
 import eye.Comm.Header;
 import eye.Comm.NameValueSet;
@@ -29,7 +30,16 @@ public class ClientUtil {
 			return;
 		}
 
-		System.out.println("Poke: " + f.getTag() + " - " + f.getNumber());
+		System.out.println("Poke: in clientutil " + f.getTag() + " - " + f.getNumber());
+	}
+	
+	public static void printFile(File f) {
+		if (f == null) {
+			System.out.println("finger is null");
+			return;
+		}
+
+		System.out.println("Poke: in clientutil " + f.getName());
 	}
 
 	public static void printHeader(Header h) {

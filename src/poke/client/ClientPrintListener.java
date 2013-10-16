@@ -34,6 +34,7 @@ public class ClientPrintListener implements ClientListener {
 		if (msg.getHeader().getRoutingId() == Header.Routing.FINGER)
 			ClientUtil.printFinger(msg.getBody().getFinger());
 		else {
+			//ClientUtil.printFinger(msg.getBody().getFile());
 			for (int i = 0, I = msg.getBody().getDocsCount(); i < I; i++)
 				ClientUtil.printDocument(msg.getBody().getDocs(i));
 		}

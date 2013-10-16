@@ -15,6 +15,13 @@
  */
 package poke.demo;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import poke.client.ClientConnection;
 import poke.client.ClientListener;
 import poke.client.ClientPrintListener;
@@ -27,25 +34,37 @@ public class Jab {
 		this.tag = tag;
 	}
 
-	public void run() {
+	public void run() throws IOException {
+	//public void run(FileInputStream input) throws IOException {
 		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
 		ClientListener listener = new ClientPrintListener("jab demo");
 		cc.addListener(listener);
-
-		for (int i = 0; i < 3; i++) {
+		
+		for (int i = 0; i < 10; i++) {
 			count++;
 			cc.poke(tag, count);
 		}
+	}
+	
+	public void runNew(FileInputStream input) throws IOException {
+	//public void run(FileInputStream input) throws IOException {
+		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
+		ClientListener listener = new ClientPrintListener("jab demo");
+		cc.addListener(listener);
+		cc.fileTransfer(input);
+		
 	}
 
 	public static void main(String[] args) {
 		try {
 			Jab jab = new Jab("jab");
 			jab.run();
-
+			//FileInputStream input = new FileInputStream("/home/padmaja/cmpe275/input.txt");
+			//jab.runNew(input);
 			// we are running asynchronously
 			System.out.println("\nExiting in 5 seconds");
-			Thread.sleep(5000);
+			Thread.sleep(500000);
+			System.out.println("\nwoke up");
 			System.exit(0);
 
 		} catch (Exception e) {

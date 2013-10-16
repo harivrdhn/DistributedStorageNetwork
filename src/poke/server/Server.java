@@ -151,7 +151,7 @@ public class Server {
 
 		// We can also accept connections from a other ports (e.g., isolate read
 		// and writes)
-
+		logger.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ public network");
 		logger.info("Starting server, listening on port = " + port);
 	}
 
@@ -183,6 +183,8 @@ public class Server {
 		// Bind and start to accept incoming connections.
 		Channel ch = bs.bind(new InetSocketAddress(port));
 		allChannels.add(ch);
+		
+		logger.info("********************************************* private network");
 
 		logger.info("Starting server, listening on port = " + port);
 	}
@@ -221,7 +223,6 @@ public class Server {
 			HeartbeatData node = new HeartbeatData(nn.getNodeId(), nn.getHost(), nn.getPort(), nn.getMgmtPort());
 			HeartbeatConnector.getInstance().addConnectToThisNode(node);
 		}
-		
 		hbMgr.start();
 
 		// manage hbMgr connections

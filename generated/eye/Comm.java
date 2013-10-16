@@ -1198,6 +1198,347 @@ public final class Comm {
     // @@protoc_insertion_point(class_scope:NameSpace)
   }
   
+  public interface fileTransferOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional bytes file = 2;
+    boolean hasFile();
+    com.google.protobuf.ByteString getFile();
+  }
+  public static final class fileTransfer extends
+      com.google.protobuf.GeneratedMessage
+      implements fileTransferOrBuilder {
+    // Use fileTransfer.newBuilder() to construct.
+    private fileTransfer(Builder builder) {
+      super(builder);
+    }
+    private fileTransfer(boolean noInit) {}
+    
+    private static final fileTransfer defaultInstance;
+    public static fileTransfer getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public fileTransfer getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return eye.Comm.internal_static_fileTransfer_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return eye.Comm.internal_static_fileTransfer_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional bytes file = 2;
+    public static final int FILE_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString file_;
+    public boolean hasFile() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public com.google.protobuf.ByteString getFile() {
+      return file_;
+    }
+    
+    private void initFields() {
+      file_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(2, file_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, file_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static eye.Comm.fileTransfer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static eye.Comm.fileTransfer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static eye.Comm.fileTransfer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static eye.Comm.fileTransfer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(eye.Comm.fileTransfer prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements eye.Comm.fileTransferOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return eye.Comm.internal_static_fileTransfer_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return eye.Comm.internal_static_fileTransfer_fieldAccessorTable;
+      }
+      
+      // Construct using eye.Comm.fileTransfer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        file_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return eye.Comm.fileTransfer.getDescriptor();
+      }
+      
+      public eye.Comm.fileTransfer getDefaultInstanceForType() {
+        return eye.Comm.fileTransfer.getDefaultInstance();
+      }
+      
+      public eye.Comm.fileTransfer build() {
+        eye.Comm.fileTransfer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private eye.Comm.fileTransfer buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        eye.Comm.fileTransfer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public eye.Comm.fileTransfer buildPartial() {
+        eye.Comm.fileTransfer result = new eye.Comm.fileTransfer(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.file_ = file_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof eye.Comm.fileTransfer) {
+          return mergeFrom((eye.Comm.fileTransfer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(eye.Comm.fileTransfer other) {
+        if (other == eye.Comm.fileTransfer.getDefaultInstance()) return this;
+        if (other.hasFile()) {
+          setFile(other.getFile());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000001;
+              file_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional bytes file = 2;
+      private com.google.protobuf.ByteString file_ = com.google.protobuf.ByteString.EMPTY;
+      public boolean hasFile() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public com.google.protobuf.ByteString getFile() {
+        return file_;
+      }
+      public Builder setFile(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        file_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearFile() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        file_ = getDefaultInstance().getFile();
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:fileTransfer)
+    }
+    
+    static {
+      defaultInstance = new fileTransfer(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:fileTransfer)
+  }
+  
   public interface NameValueSetOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
@@ -10260,6 +10601,381 @@ public final class Comm {
     // @@protoc_insertion_point(class_scope:Management)
   }
   
+  public interface FileOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string name = 1;
+    boolean hasName();
+    String getName();
+  }
+  public static final class File extends
+      com.google.protobuf.GeneratedMessage
+      implements FileOrBuilder {
+    // Use File.newBuilder() to construct.
+    private File(Builder builder) {
+      super(builder);
+    }
+    private File(boolean noInit) {}
+    
+    private static final File defaultInstance;
+    public static File getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public File getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return eye.Comm.internal_static_File_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return eye.Comm.internal_static_File_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string name = 1;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private java.lang.Object name_;
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      name_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getNameBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getNameBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static eye.Comm.File parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static eye.Comm.File parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.File parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static eye.Comm.File parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.File parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static eye.Comm.File parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static eye.Comm.File parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static eye.Comm.File parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static eye.Comm.File parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static eye.Comm.File parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(eye.Comm.File prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements eye.Comm.FileOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return eye.Comm.internal_static_File_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return eye.Comm.internal_static_File_fieldAccessorTable;
+      }
+      
+      // Construct using eye.Comm.File.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return eye.Comm.File.getDescriptor();
+      }
+      
+      public eye.Comm.File getDefaultInstanceForType() {
+        return eye.Comm.File.getDefaultInstance();
+      }
+      
+      public eye.Comm.File build() {
+        eye.Comm.File result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private eye.Comm.File buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        eye.Comm.File result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public eye.Comm.File buildPartial() {
+        eye.Comm.File result = new eye.Comm.File(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.name_ = name_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof eye.Comm.File) {
+          return mergeFrom((eye.Comm.File)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(eye.Comm.File other) {
+        if (other == eye.Comm.File.getDefaultInstance()) return this;
+        if (other.hasName()) {
+          setName(other.getName());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              name_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string name = 1;
+      private java.lang.Object name_ = "";
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setName(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      void setName(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:File)
+    }
+    
+    static {
+      defaultInstance = new File(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:File)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_Finger_descriptor;
   private static
@@ -10270,6 +10986,11 @@ public final class Comm {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_NameSpace_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_fileTransfer_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_fileTransfer_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_NameValueSet_descriptor;
   private static
@@ -10335,6 +11056,11 @@ public final class Comm {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Management_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_File_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_File_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -10348,42 +11074,43 @@ public final class Comm {
       "\n\003tag\030\002 \002(\t\"j\n\tNameSpace\022\n\n\002id\030\001 \001(\003\022\014\n\004" +
       "name\030\002 \002(\t\022\014\n\004desc\030\003 \001(\t\022\017\n\007created\030\004 \001(" +
       "\003\022\025\n\rlast_modified\030\005 \001(\003\022\r\n\005owner\030\006 \001(\t\"" +
-      "\224\001\n\014NameValueSet\022)\n\tnode_type\030\001 \002(\0162\026.Na" +
-      "meValueSet.NodeType\022\014\n\004name\030\002 \001(\t\022\r\n\005val" +
-      "ue\030\003 \001(\t\022\033\n\004node\030\004 \003(\0132\r.NameValueSet\"\037\n" +
-      "\010NodeType\022\010\n\004NODE\020\001\022\t\n\005VALUE\020\002\"K\n\010Docume" +
-      "nt\022\022\n\nname_space\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\037\n\010do" +
-      "cument\030\003 \002(\0132\r.NameValueSet\"+\n\013DocumentS",
-      "et\022\034\n\tdocuments\030\001 \003(\0132\t.Document\"*\n\014Name" +
-      "SpaceSet\022\032\n\006spaces\030\001 \003(\0132\n.NameSpace\")\n\013" +
-      "RoutingPath\022\014\n\004node\030\001 \002(\t\022\014\n\004time\030\002 \002(\003\"" +
-      "\304\003\n\006Header\022#\n\nrouting_id\030\001 \002(\0162\017.Header." +
-      "Routing\022\022\n\noriginator\030\002 \002(\t\022\013\n\003tag\030\003 \001(\t" +
-      "\022\014\n\004time\030\004 \001(\003\022\'\n\nreply_code\030\005 \001(\0162\023.Hea" +
-      "der.ReplyStatus\022\021\n\treply_msg\030\006 \001(\t\022\032\n\004pa" +
-      "th\030\007 \003(\0132\014.RoutingPath\022\016\n\006toNode\030\010 \001(\t\"\246" +
-      "\001\n\007Routing\022\n\n\006FINGER\020\002\022\t\n\005STATS\020\003\022\020\n\014NAM" +
-      "ESPACEADD\020\n\022\021\n\rNAMESPACELIST\020\013\022\023\n\017NAMESP",
-      "ACEUPDATE\020\014\022\023\n\017NAMESPACEREMOVE\020\r\022\n\n\006DOCA" +
-      "DD\020\024\022\013\n\007DOCFIND\020\025\022\r\n\tDOCUPDATE\020\026\022\r\n\tDOCR" +
-      "EMOVE\020\027\"U\n\013ReplyStatus\022\013\n\007SUCCESS\020\001\022\013\n\007F" +
-      "AILURE\020\002\022\n\n\006NOAUTH\020\003\022\016\n\nMISSINGARG\020\004\022\020\n\014" +
-      "NOCONNECTION\020\005\"U\n\007Payload\022\027\n\006finger\030\001 \001(" +
-      "\0132\007.Finger\022\026\n\003doc\030\002 \001(\0132\t.Document\022\031\n\005sp" +
-      "ace\030\003 \001(\0132\n.NameSpace\"v\n\014PayloadReply\022\027\n" +
-      "\006finger\030\001 \001(\0132\007.Finger\022\027\n\004docs\030\002 \003(\0132\t.D" +
-      "ocument\022\032\n\006spaces\030\003 \003(\0132\n.NameSpace\022\030\n\005s" +
-      "tats\030\004 \001(\0132\t.Document\":\n\007Request\022\027\n\006head",
-      "er\030\001 \002(\0132\007.Header\022\026\n\004body\030\002 \002(\0132\010.Payloa" +
-      "d\"@\n\010Response\022\027\n\006header\030\001 \002(\0132\007.Header\022\033" +
-      "\n\004body\030\002 \002(\0132\r.PayloadReply\",\n\tHeartbeat" +
-      "\022\016\n\006nodeId\030\001 \002(\t\022\017\n\007timeRef\030\002 \002(\003\"\225\001\n\007Ne" +
-      "twork\022\016\n\006nodeId\030\001 \002(\t\022\037\n\006action\030\002 \002(\0162\017." +
-      "Network.Action\"Y\n\006Action\022\014\n\010NODEJOIN\020\001\022\r" +
-      "\n\tNODELEAVE\020\002\022\014\n\010NODEDEAD\020\003\022\007\n\003MAP\0207\022\014\n\010" +
-      "ANNOUNCE\0208\022\r\n\010SHUTDOWN\020\347\007\"?\n\nManagement\022" +
-      "\027\n\005graph\030\001 \001(\0132\010.Network\022\030\n\004beat\030\002 \001(\0132\n" +
-      ".HeartbeatB\007\n\003eyeH\001"
+      "\034\n\014fileTransfer\022\014\n\004file\030\002 \001(\014\"\224\001\n\014NameVa" +
+      "lueSet\022)\n\tnode_type\030\001 \002(\0162\026.NameValueSet" +
+      ".NodeType\022\014\n\004name\030\002 \001(\t\022\r\n\005value\030\003 \001(\t\022\033" +
+      "\n\004node\030\004 \003(\0132\r.NameValueSet\"\037\n\010NodeType\022" +
+      "\010\n\004NODE\020\001\022\t\n\005VALUE\020\002\"K\n\010Document\022\022\n\nname" +
+      "_space\030\001 \001(\t\022\n\n\002id\030\002 \001(\003\022\037\n\010document\030\003 \002",
+      "(\0132\r.NameValueSet\"+\n\013DocumentSet\022\034\n\tdocu" +
+      "ments\030\001 \003(\0132\t.Document\"*\n\014NameSpaceSet\022\032" +
+      "\n\006spaces\030\001 \003(\0132\n.NameSpace\")\n\013RoutingPat" +
+      "h\022\014\n\004node\030\001 \002(\t\022\014\n\004time\030\002 \002(\003\"\304\003\n\006Header" +
+      "\022#\n\nrouting_id\030\001 \002(\0162\017.Header.Routing\022\022\n" +
+      "\noriginator\030\002 \002(\t\022\013\n\003tag\030\003 \001(\t\022\014\n\004time\030\004" +
+      " \001(\003\022\'\n\nreply_code\030\005 \001(\0162\023.Header.ReplyS" +
+      "tatus\022\021\n\treply_msg\030\006 \001(\t\022\032\n\004path\030\007 \003(\0132\014" +
+      ".RoutingPath\022\016\n\006toNode\030\010 \001(\t\"\246\001\n\007Routing" +
+      "\022\n\n\006FINGER\020\002\022\t\n\005STATS\020\003\022\020\n\014NAMESPACEADD\020",
+      "\n\022\021\n\rNAMESPACELIST\020\013\022\023\n\017NAMESPACEUPDATE\020" +
+      "\014\022\023\n\017NAMESPACEREMOVE\020\r\022\n\n\006DOCADD\020\024\022\013\n\007DO" +
+      "CFIND\020\025\022\r\n\tDOCUPDATE\020\026\022\r\n\tDOCREMOVE\020\027\"U\n" +
+      "\013ReplyStatus\022\013\n\007SUCCESS\020\001\022\013\n\007FAILURE\020\002\022\n" +
+      "\n\006NOAUTH\020\003\022\016\n\nMISSINGARG\020\004\022\020\n\014NOCONNECTI" +
+      "ON\020\005\"U\n\007Payload\022\027\n\006finger\030\001 \001(\0132\007.Finger" +
+      "\022\026\n\003doc\030\002 \001(\0132\t.Document\022\031\n\005space\030\003 \001(\0132" +
+      "\n.NameSpace\"v\n\014PayloadReply\022\027\n\006finger\030\001 " +
+      "\001(\0132\007.Finger\022\027\n\004docs\030\002 \003(\0132\t.Document\022\032\n" +
+      "\006spaces\030\003 \003(\0132\n.NameSpace\022\030\n\005stats\030\004 \001(\013",
+      "2\t.Document\":\n\007Request\022\027\n\006header\030\001 \002(\0132\007" +
+      ".Header\022\026\n\004body\030\002 \002(\0132\010.Payload\"@\n\010Respo" +
+      "nse\022\027\n\006header\030\001 \002(\0132\007.Header\022\033\n\004body\030\002 \002" +
+      "(\0132\r.PayloadReply\",\n\tHeartbeat\022\016\n\006nodeId" +
+      "\030\001 \002(\t\022\017\n\007timeRef\030\002 \002(\003\"\225\001\n\007Network\022\016\n\006n" +
+      "odeId\030\001 \002(\t\022\037\n\006action\030\002 \002(\0162\017.Network.Ac" +
+      "tion\"Y\n\006Action\022\014\n\010NODEJOIN\020\001\022\r\n\tNODELEAV" +
+      "E\020\002\022\014\n\010NODEDEAD\020\003\022\007\n\003MAP\0207\022\014\n\010ANNOUNCE\0208" +
+      "\022\r\n\010SHUTDOWN\020\347\007\"?\n\nManagement\022\027\n\005graph\030\001" +
+      " \001(\0132\010.Network\022\030\n\004beat\030\002 \001(\0132\n.Heartbeat",
+      "\"\024\n\004File\022\014\n\004name\030\001 \001(\tB\007\n\003eyeH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10406,8 +11133,16 @@ public final class Comm {
               new java.lang.String[] { "Id", "Name", "Desc", "Created", "LastModified", "Owner", },
               eye.Comm.NameSpace.class,
               eye.Comm.NameSpace.Builder.class);
-          internal_static_NameValueSet_descriptor =
+          internal_static_fileTransfer_descriptor =
             getDescriptor().getMessageTypes().get(2);
+          internal_static_fileTransfer_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_fileTransfer_descriptor,
+              new java.lang.String[] { "File", },
+              eye.Comm.fileTransfer.class,
+              eye.Comm.fileTransfer.Builder.class);
+          internal_static_NameValueSet_descriptor =
+            getDescriptor().getMessageTypes().get(3);
           internal_static_NameValueSet_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_NameValueSet_descriptor,
@@ -10415,7 +11150,7 @@ public final class Comm {
               eye.Comm.NameValueSet.class,
               eye.Comm.NameValueSet.Builder.class);
           internal_static_Document_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_Document_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Document_descriptor,
@@ -10423,7 +11158,7 @@ public final class Comm {
               eye.Comm.Document.class,
               eye.Comm.Document.Builder.class);
           internal_static_DocumentSet_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_DocumentSet_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_DocumentSet_descriptor,
@@ -10431,7 +11166,7 @@ public final class Comm {
               eye.Comm.DocumentSet.class,
               eye.Comm.DocumentSet.Builder.class);
           internal_static_NameSpaceSet_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_NameSpaceSet_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_NameSpaceSet_descriptor,
@@ -10439,7 +11174,7 @@ public final class Comm {
               eye.Comm.NameSpaceSet.class,
               eye.Comm.NameSpaceSet.Builder.class);
           internal_static_RoutingPath_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_RoutingPath_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_RoutingPath_descriptor,
@@ -10447,7 +11182,7 @@ public final class Comm {
               eye.Comm.RoutingPath.class,
               eye.Comm.RoutingPath.Builder.class);
           internal_static_Header_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_Header_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Header_descriptor,
@@ -10455,7 +11190,7 @@ public final class Comm {
               eye.Comm.Header.class,
               eye.Comm.Header.Builder.class);
           internal_static_Payload_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_Payload_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Payload_descriptor,
@@ -10463,7 +11198,7 @@ public final class Comm {
               eye.Comm.Payload.class,
               eye.Comm.Payload.Builder.class);
           internal_static_PayloadReply_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_PayloadReply_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_PayloadReply_descriptor,
@@ -10471,7 +11206,7 @@ public final class Comm {
               eye.Comm.PayloadReply.class,
               eye.Comm.PayloadReply.Builder.class);
           internal_static_Request_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Request_descriptor,
@@ -10479,7 +11214,7 @@ public final class Comm {
               eye.Comm.Request.class,
               eye.Comm.Request.Builder.class);
           internal_static_Response_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_Response_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Response_descriptor,
@@ -10487,7 +11222,7 @@ public final class Comm {
               eye.Comm.Response.class,
               eye.Comm.Response.Builder.class);
           internal_static_Heartbeat_descriptor =
-            getDescriptor().getMessageTypes().get(12);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_Heartbeat_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Heartbeat_descriptor,
@@ -10495,7 +11230,7 @@ public final class Comm {
               eye.Comm.Heartbeat.class,
               eye.Comm.Heartbeat.Builder.class);
           internal_static_Network_descriptor =
-            getDescriptor().getMessageTypes().get(13);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_Network_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Network_descriptor,
@@ -10503,13 +11238,21 @@ public final class Comm {
               eye.Comm.Network.class,
               eye.Comm.Network.Builder.class);
           internal_static_Management_descriptor =
-            getDescriptor().getMessageTypes().get(14);
+            getDescriptor().getMessageTypes().get(15);
           internal_static_Management_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Management_descriptor,
               new java.lang.String[] { "Graph", "Beat", },
               eye.Comm.Management.class,
               eye.Comm.Management.Builder.class);
+          internal_static_File_descriptor =
+            getDescriptor().getMessageTypes().get(16);
+          internal_static_File_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_File_descriptor,
+              new java.lang.String[] { "Name", },
+              eye.Comm.File.class,
+              eye.Comm.File.Builder.class);
           return null;
         }
       };

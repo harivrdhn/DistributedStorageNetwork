@@ -15,6 +15,9 @@
  */
 package poke.client;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -28,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.GeneratedMessage;
 
+import eye.Comm.File;
 import eye.Comm.Finger;
 import eye.Comm.Header;
 import eye.Comm.Payload;
@@ -90,13 +94,13 @@ public class ClientConnection {
 		Finger.Builder f = eye.Comm.Finger.newBuilder();
 		f.setTag(tag);
 		f.setNumber(num);
-
+		
 		// payload containing data
 		Request.Builder r = Request.newBuilder();
 		eye.Comm.Payload.Builder p = Payload.newBuilder();
 		p.setFinger(f.build());
 		r.setBody(p.build());
-
+		
 		// header with routing info
 		eye.Comm.Header.Builder h = Header.newBuilder();
 		h.setOriginator("client");
@@ -114,7 +118,24 @@ public class ClientConnection {
 			logger.warn("Unable to deliver message, queuing");
 		}
 	}
-
+	
+	public void fileTransfer(FileInputStream input) {
+		File.Builder fileBuilder = File.newBuilder();
+	    try {
+			fileBuilder.mergeFrom(input);
+			File fb = fileBuilder.build();
+			try {
+				outbound.put(fb);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private void init() {
 		// the queue to support client-side surging
 		outbound = new LinkedBlockingDeque<com.google.protobuf.GeneratedMessage>();

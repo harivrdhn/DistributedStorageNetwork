@@ -31,9 +31,13 @@ message NameValueSet {
 }
 
 message Document {
-    optional string name_space = 1;
+    optional string docName = 1;
     optional int64 id = 2;
-    required NameValueSet document = 3;
+    optional NameValueSet document = 3;
+    optional bytes chunkContent = 4;
+    optional int64 chunkId = 5;
+    optional int64 totalChunk = 6;
+    optional int64 docSize = 7;
 }
 
 message DocumentSet {
@@ -67,6 +71,7 @@ message Header {
 
     // if the message is for a specific node, this will be set
     optional string toNode = 8;
+    optional int64 remainingHopCount = 9;
 
     enum Routing {
         FINGER = 2;
@@ -79,6 +84,7 @@ message Header {
         DOCFIND = 21;
         DOCUPDATE = 22;
         DOCREMOVE = 23;
+        DOCADDHANDSHAKE = 24;
         }
         
      enum ReplyStatus {
@@ -136,3 +142,4 @@ message Management {
 	optional Network graph = 1;
 	optional Heartbeat beat = 2;
 }	
+
