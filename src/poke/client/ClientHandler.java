@@ -39,9 +39,11 @@ public class ClientHandler extends SimpleChannelUpstreamHandler {
 	private volatile Channel channel;
 
 	public ClientHandler() {
+		System.out.println("in constructor  ---- ClientHandler");
 	}
 
 	public boolean send(GeneratedMessage msg) {
+		System.out.println("in Send Function  ---- ClientHandler");
 		// TODO a queue is needed to prevent overloading of the socket
 		// connection. For the demonstration, we don't need it
 		ChannelFuture cf = channel.write(msg);
@@ -54,6 +56,7 @@ public class ClientHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	public void handleMessage(eye.Comm.Response msg) {
+		System.out.println("in handleMessage  function---- ClientHandler");
 		for (String id : listeners.keySet()) {
 			ClientListener cl = listeners.get(id);
 
@@ -72,12 +75,14 @@ public class ClientHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		System.out.println("in ChannelOpen function  ---- ClientHandler");
 		channel = e.getChannel();
 		super.channelOpen(ctx, e);
 	}
 
 	@Override
 	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		System.out.println("in channelClosed function of ----------  ClientHandler");
 		if (channel.isConnected())
 			channel.write(ChannelBuffers.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 	}
@@ -91,11 +96,13 @@ public class ClientHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+		System.out.println("in messagereceived function  ---- ClientHandler");
 		handleMessage((eye.Comm.Response) e.getMessage());
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+		System.out.println("in exceptionCaught function of ----------  ClientHandler");
 		logger.error("Handler exception, closing channel", e);
 
 		// TODO do we really want to do this? try to re-connect?

@@ -68,7 +68,7 @@ public class OutboundMgmtWorker extends Thread {
 		}
 
 		if (!forever) {
-			logger.info("management outbound queue closing");
+			System.out.println("management outbound queue closing");
 		}
 	}
 

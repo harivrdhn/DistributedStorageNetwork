@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
+// CODE CHANGES BY PADMAJA
+
 package poke.demo;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -28,6 +28,8 @@ import poke.client.ClientPrintListener;
 
 public class Jab {
 	private String tag;
+	public static int num=0;//leader
+	boolean flag;//leader
 	private int count;
 
 	public Jab(String tag) {
@@ -35,35 +37,88 @@ public class Jab {
 	}
 
 	public void run() throws IOException {
-	//public void run(FileInputStream input) throws IOException {
 		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
 		ClientListener listener = new ClientPrintListener("jab demo");
 		cc.addListener(listener);
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			count++;
 			cc.poke(tag, count);
 		}
 	}
 	
-	public void runNew(FileInputStream input) throws IOException {
-	//public void run(FileInputStream input) throws IOException {
+	public void runDocumentAdd(String docPath) throws IOException {
 		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
 		ClientListener listener = new ClientPrintListener("jab demo");
 		cc.addListener(listener);
-		cc.fileTransfer(input);
-		
+		cc.poke(tag+"|lead", 0);
+		flag=true;
+		while(flag){
+			if(num==1){
+				cc.fileTransfer(docPath,tag);
+				flag=false;
+				System.out.println("File action complete. Sending Lead ack.");
+				cc.poke(tag+"|lead", 2);
+			}
+		}
+	}
+	public void runDocumentFind(String docPath) throws IOException {
+		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
+		ClientListener listener = new ClientPrintListener("jab demo");
+		cc.addListener(listener);
+		cc.poke(tag+"|lead", 0);
+		flag=true;
+		while(flag){
+			if(num==1){
+				cc.fileFind(docPath, tag);
+				flag=false;
+				cc.poke(tag+"|lead", 2);
+			}
+		}
+	}
+	public void runDocumentRemove(String docPath) throws IOException {
+		ClientConnection cc = ClientConnection.initConnection("localhost", 5570);
+		ClientListener listener = new ClientPrintListener("jab demo");
+		cc.addListener(listener);
+		cc.poke(tag+"|lead", 0);
+		flag=true;
+		while(flag){
+			if(num==1){
+				cc.fileRemove(docPath, tag);
+				flag=false;
+				cc.poke(tag+"|lead", 2);
+			}
+		}
 	}
 
 	public static void main(String[] args) {
 		try {
-			Jab jab = new Jab("jab");
-			jab.run();
-			//FileInputStream input = new FileInputStream("/home/padmaja/cmpe275/input.txt");
-			//jab.runNew(input);
+			Jab jab = new Jab(args[0]);
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			if(jab.tag.equalsIgnoreCase("DOCADD")){
+				System.out.println("enter file path to add file");
+				String docPath = br.readLine();				
+				jab.runDocumentAdd(docPath);			
+			}
+			else if (jab.tag.equalsIgnoreCase("DOCFIND")){
+				System.out.println("enter file name to search");
+				String docName = br.readLine();
+				jab.runDocumentFind(docName);
+			}
+			else if(jab.tag.equalsIgnoreCase("DOCREMOVE")){
+				System.out.println("enter file name to REMOVE");
+				String docPath = br.readLine();
+				jab.runDocumentRemove(docPath);
+			}
+			else{
+				jab.run();
+				System.out.println("the file operation is not appropriate! please try again as DOCADD,DOCFIND,DOCREM,DOCEDIT");
+			}
+			
+			
 			// we are running asynchronously
 			System.out.println("\nExiting in 5 seconds");
-			Thread.sleep(500000);
+			Thread.sleep(5000000);
 			System.out.println("\nwoke up");
 			System.exit(0);
 

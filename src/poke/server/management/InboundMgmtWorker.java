@@ -67,7 +67,7 @@ public class InboundMgmtWorker extends Thread {
 			try {
 				// block until a message is enqueued
 				ManagementQueueEntry msg = ManagementQueue.inbound.take();
-				logger.info("Inbound message received");
+				System.out.println("Inbound message received");
 				Management req = (Management) msg.req;
 				if (req.hasBeat()) {
 					/**
@@ -78,11 +78,11 @@ public class InboundMgmtWorker extends Thread {
 					 * Incoming are connections this node establishes, which is
 					 * handled by the HeartbeatConnector.
 					 */
-					logger.info("Heartbeat received from " + req.getBeat().getNodeId());
+					System.out.println("Heartbeat received from " + req.getBeat().getNodeId());
 					HeartbeatManager.getInstance().updateInboundHB(req.getBeat().getNodeId());
 				} else if (req.hasGraph()) {
 					Network n = req.getGraph();
-					logger.info("Network: node '" + n.getNodeId() + "' sent a " + n.getAction());
+					System.out.println("Network: node '" + n.getNodeId() + "' sent a " + n.getAction());
 
 					/**
 					 * Outgoing: when a node joins to another node, the
@@ -95,7 +95,7 @@ public class InboundMgmtWorker extends Thread {
 							SocketAddress socka = msg.channel.getLocalAddress();
 							if (socka != null) {
 								InetSocketAddress isa = (InetSocketAddress) socka;
-								logger.info("NODEJOIN: " + isa.getHostName() + ", " + isa.getPort());
+								System.out.println("NODEJOIN: " + isa.getHostName() + ", " + isa.getPort());
 								HeartbeatManager.getInstance().addOutgoingChannel(n.getNodeId(), isa.getHostName(),
 										isa.getPort(), msg.channel, msg.sa);
 							}
@@ -124,7 +124,7 @@ public class InboundMgmtWorker extends Thread {
 		}
 
 		if (!forever) {
-			logger.info("connection queue closing");
+			System.out.println("connection queue closing");
 		}
 	}
 }

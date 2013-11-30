@@ -37,17 +37,18 @@ public class NoOpQueue implements ChannelQueue {
 
 	@Override
 	public void shutdown(boolean hard) {
-		logger.info(queueName + ": queue shutting down");
+		System.out.println(queueName + ": queue shutting down");
 	}
 
 	@Override
 	public void enqueueRequest(Request req) {
-		logger.info(queueName + ": request received");
+		logger.error("in enqueueRequest in noopqueue");
+		System.out.println(queueName + ": request received");
 	}
 
 	@Override
 	public void enqueueResponse(Response reply) {
-		logger.info(queueName + ": response received");
+		System.out.println(queueName + ": response received");
 	}
 
 }

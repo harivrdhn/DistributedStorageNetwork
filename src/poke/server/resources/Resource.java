@@ -33,7 +33,16 @@ public interface Resource {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	Response process(Request request);
+	Response process(Request request) throws InterruptedException;
+	
+	/**
+	 * called to process responses
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Response process(Response response);
 
 }

@@ -14,4 +14,11 @@ public interface ClientListener {
 	 * @param msg
 	 */
 	void onMessage(eye.Comm.Response msg);
+	
+	/**
+	 * receives the message event from the client's channel
+	 * 
+	 * @param msg
+	 */
+	void onMessage(eye.Comm.Request msg);
 }

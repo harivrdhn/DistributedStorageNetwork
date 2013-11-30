@@ -26,6 +26,7 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 public class ServerDecoderPipeline implements ChannelPipelineFactory {
 
 	public ServerDecoderPipeline() {
+		System.out.println("inside constructor of ServerDecoderPipeline");
 	}
 
 	public ChannelPipeline getPipeline() throws Exception {

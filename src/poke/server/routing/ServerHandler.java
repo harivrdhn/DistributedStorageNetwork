@@ -51,7 +51,7 @@ public class ServerHandler extends SimpleChannelUpstreamHandler {
 	private ChannelQueue queue;
 
 	public ServerHandler() {
-		// logger.info("** ServerHandler created **");
+		 System.out.println("** ServerHandler created **");
 	}
 
 	/**
@@ -60,6 +60,7 @@ public class ServerHandler extends SimpleChannelUpstreamHandler {
 	 * @param msg
 	 */
 	public void handleMessage(eye.Comm.Request req, Channel channel) {
+		System.out.println("in handleMessage funtion ServerHandler ");
 		if (req == null) {
 			logger.error("ERROR: Unexpected content - null");
 			return;
@@ -94,6 +95,7 @@ public class ServerHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+		System.out.println("in messageReceived funtion ServerHandler ");
 		handleMessage((eye.Comm.Request) e.getMessage(), e.getChannel());
 	}
 

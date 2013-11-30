@@ -137,7 +137,7 @@ public class HeartMonitor {
 	protected Channel connect() {
 		// Start the connection attempt.
 		if (channel == null) {
-			logger.info("connecting to " + host + ":" + port);
+			System.out.println("connecting to " + host + ":" + port);
 			channel = bootstrap.connect(new InetSocketAddress(host, port));
 		}
 
@@ -232,7 +232,7 @@ public class HeartMonitor {
 			}
 		}
 
-		logger.info("trying to connect monitor to " + host + ":" + mport);
+		System.out.println("trying to connect monitor to " + host + ":" + mport);
 		HeartMonitor hm = new HeartMonitor(host, mport);
 		hm.waitForever();
 	}

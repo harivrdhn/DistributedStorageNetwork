@@ -16,6 +16,8 @@
 package poke.server.queue;
 
 import java.lang.Thread.State;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.jboss.netty.channel.Channel;
@@ -24,13 +26,20 @@ import org.jboss.netty.channel.ChannelFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import poke.server.Server;
+import poke.server.management.HeartbeatManager;
 import poke.server.resources.Resource;
 import poke.server.resources.ResourceFactory;
 import poke.server.resources.ResourceUtil;
 
 import com.google.protobuf.GeneratedMessage;
 
+import eye.Comm.Document;
+import eye.Comm.Finger;
+import eye.Comm.Header;
 import eye.Comm.Header.ReplyStatus;
+import eye.Comm.NameSpace;
+import eye.Comm.Payload;
 import eye.Comm.Request;
 import eye.Comm.Response;
 
@@ -88,7 +97,7 @@ public class PerChannelQueue implements ChannelQueue {
 	 */
 	@Override
 	public void shutdown(boolean hard) {
-		logger.info("server is shutting down");
+		System.out.println("server is shutting down");
 
 		channel = null;
 
@@ -121,6 +130,7 @@ public class PerChannelQueue implements ChannelQueue {
 	 */
 	@Override
 	public void enqueueRequest(Request req) {
+		System.out.println("@@@@@@@@@@@@@@@@@@@ in enqueueRequest in perchannelqueue");
 		try {
 			inbound.put(req);
 		} catch (InterruptedException e) {
@@ -135,6 +145,7 @@ public class PerChannelQueue implements ChannelQueue {
 	 */
 	@Override
 	public void enqueueResponse(Response reply) {
+		System.out.println("@@@@@@@@@@@@@@@@@@@ in enqueueResponse in perchannelqueue");
 		if (reply == null)
 			return;
 
@@ -217,55 +228,173 @@ public class PerChannelQueue implements ChannelQueue {
 		}
 
 		@Override
-		public void run() {
-			Channel conn = sq.channel;
-			if (conn == null || !conn.isOpen()) {
-				PerChannelQueue.logger.error("connection missing, no inbound communication");
-				return;
-			}
+        public void run() {
+            Channel conn = sq.channel;
+            if (conn == null || !conn.isOpen()) {
+                PerChannelQueue.logger.error("connection missing, no inbound communication");
+                return;
+            }
 
-			while (true) {
-				if (!forever && sq.inbound.size() == 0)
-					break;
+            while (true) {
+                if (!forever && sq.inbound.size() == 0)
+                    break;
 
-				try {
-					// block until a message is enqueued
-					GeneratedMessage msg = sq.inbound.take();
+                try {
+                    // block until a message is enqueued
+                    GeneratedMessage msg = sq.inbound.take();
 
-					// process request and enqueue response
-					if (msg instanceof Request) {
-						Request req = ((Request) msg);
+                    // process request and enqueue response
+                    if (msg instanceof Request) {        // this is from client
+                        Request req = ((Request) msg);       
+                        
+//leader checking
+                        
+                        if(req.getBody().getFinger().getTag().indexOf("lead")!=-1){
+                			System.out.println("Leader part being executed");
+                			String tags[]=req.getBody().getFinger().getTag().split("[|]+");
+                			HeartbeatManager.leadcli=tags[0];
+                			
+                			Request.Builder rb = Request.newBuilder();
+                			rb.setHeader(ResourceUtil.buildHeaderFrom(req.getHeader(), ReplyStatus.SUCCESS, null));
+                			Payload.Builder pb = Payload.newBuilder();
+                			Finger.Builder fb = Finger.newBuilder();
+                			fb.setTag(req.getBody().getFinger().getTag());
+                			fb.setNumber(req.getBody().getFinger().getNumber());
+                			pb.setFinger(fb.build());
+                			rb.setBody(pb.build());
+                			
+                			eye.Comm.Request reqNew = rb.build();
+                            
+                            Resource rsc = ResourceFactory.getInstance().resourceInstance(reqNew.getHeader());
+                           
+                            Response reply = null;
+                            if (rsc == null) {
+                                logger.error("failed to obtain resource for " + reqNew);
+                                reply = ResourceUtil.buildError(reqNew.getHeader(), ReplyStatus.FAILURE,
+                                        "Request not processed");
+                            } else
+                            	reply = rsc.process(reqNew);
+                            
+                            sq.enqueueResponse(reply);
+                	
+                		}
+                        else {
+                        
+                        ResultSet rs = Server.databaseStorage.findDocument(req.getBody().getDoc().getDocName(), false, 0);
+                        System.out.println(req.getBody().getDoc().getDocName());                  
+                       // if(req.getHeader().getTag().equalsIgnoreCase("docfind") && rs.next()){
+                        if(req.getHeader().getTag().equalsIgnoreCase("docfind")){
+                        	
+                            int totalChunks = 0;
+                               
+                                //ResultSet rs = Server.databaseStorage.findDocument(req.getBody().getDoc().getDocName(), false, 0);
+                                try {
+                                    while(rs.next()){                       
+                                   
+                                        totalChunks = rs.getInt("numberofchunks");
+                                     	System.out.println("TOTAL CHUNKS "+totalChunks);
+                                    }
+                                } catch (SQLException e) {
+                                System.out.println("error getting Chunk ids "+e);
+                                }
+                                for(int i=0;i<totalChunks;i++){
+                                	System.out.println("IN FOR LOOP OF FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"+totalChunks);
+                                    Finger.Builder f = eye.Comm.Finger.newBuilder();
+                                    f.setTag(req.getHeader().getTag());
 
-						// do we need to route the request?
+                                    Document.Builder doc = eye.Comm.Document.newBuilder();
+                                    doc.setDocName(req.getBody().getDoc().getDocName());
+                                    doc.setChunkId(i+1);
+                                   
+                                    // payload containing data
+                                    Request.Builder r = Request.newBuilder();
+                                    eye.Comm.Payload.Builder p = Payload.newBuilder();
+                                   
+                                    NameSpace.Builder ns = NameSpace.newBuilder();
+                                    ns.setName(req.getBody().getSpace().getName());
+                                    p.setSpace(ns);
+                                   
+                                    p.setDoc(doc);
+                                    r.setBody(p.build());
+                                   
+                                    // header with routing info
+                                    eye.Comm.Header.Builder h = Header.newBuilder();
+                                    h.setOriginator("zero");
+                                    h.setTag(req.getHeader().getTag());
+                                    h.setTime(System.currentTimeMillis());
+                                    h.setRoutingId(eye.Comm.Header.Routing.DOCFIND);
+                                    r.setHeader(h.build());
+                                    
+                                    if(req.getHeader().hasRemainingHopCount())
+                    				{
+                    					h.setRemainingHopCount(req.getHeader().getRemainingHopCount());
+                    					//System.out.println(" &&&&  "+ hbldr.getOriginator() + ".... Current hop count"+ hbldr.getRemainingHopCount());
+                    				}
+                    				
+                                    eye.Comm.Request reqNew = r.build();
+                                   
+                                    Resource rsc = ResourceFactory.getInstance().resourceInstance(reqNew.getHeader());
+                                   
+                                    Response reply = null;
+                                    if (rsc == null) {
+                                        logger.error("failed to obtain resource for " + reqNew);
+                                        reply = ResourceUtil.buildError(reqNew.getHeader(), ReplyStatus.FAILURE,
+                                                "Request not processed");
+                                    } else
+                                    	reply = rsc.process(reqNew);
+                                    
+                                    sq.enqueueResponse(reply);
+                                }                                          
+                           
+                        }
+                        else{
+                            Resource rsc = ResourceFactory.getInstance().resourceInstance(req.getHeader());
+                           
+                            Response reply = null;
+                            if (rsc == null) {
+                                logger.error("failed to obtain resource for " + req);
+                                reply = ResourceUtil.buildError(req.getHeader(), ReplyStatus.FAILURE,
+                                        "Request not processed");
+                            } else
+                                reply = rsc.process(req);
+                            sq.enqueueResponse(reply);
+                        }
+                        }
+                    }
+                    /*else{
+                        if (msg instanceof Response) {        // this is from broadcast server response
+                            Response response = ((Response) msg);
+                            System.out.println("-----------  in response from broadcast server --------------  perchannelqueue");
+                            // do we need to route the request?
 
-						// handle it locally
-						Resource rsc = ResourceFactory.getInstance().resourceInstance(req.getHeader());
+                            // handle it locally
+                            Resource rsc = ResourceFactory.getInstance().resourceInstance(response.getHeader());
 
-						Response reply = null;
-						if (rsc == null) {
-							logger.error("failed to obtain resource for " + req);
-							reply = ResourceUtil.buildError(req.getHeader(), ReplyStatus.FAILURE,
-									"Request not processed");
-						} else
-							reply = rsc.process(req);
+                            Response reply = null;
+                            if (rsc == null) {
+                                logger.error("failed to obtain resource for " + response);
+                                reply = ResourceUtil.buildError(response.getHeader(), ReplyStatus.FAILURE,
+                                        "Request not processed");
+                            } else
+                                reply = rsc.process(response);
 
-						sq.enqueueResponse(reply);
-					}
+                            sq.enqueueResponse(reply);
+                        }
+                    }*/
 
-				} catch (InterruptedException ie) {
-					break;
-				} catch (Exception e) {
-					PerChannelQueue.logger.error("Unexpected processing failure", e);
-					break;
-				}
-			}
+                } catch (InterruptedException ie) {
+                    break;
+                } catch (Exception e) {
+                    PerChannelQueue.logger.error("Unexpected processing failure", e);
+                    break;
+                }
+            }
 
-			if (!forever) {
-				PerChannelQueue.logger.info("connection queue closing");
-			}
-		}
-	}
-
+            if (!forever) {
+                PerChannelQueue.logger.info("connection queue closing");
+            }
+        }
+    }
 	public class CloseListener implements ChannelFutureListener {
 		private ChannelQueue sq;
 

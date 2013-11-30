@@ -75,10 +75,10 @@ public class HeartbeatConnector extends Thread {
 	@Override
 	public void run() {
 		if (monitors.size() == 0) {
-			logger.info("HB connection monitor not started, no connections to establish");
+			System.out.println("HB connection monitor not started, no connections to establish");
 			return;
 		} else
-			logger.info("HB connection monitor starting, node has " + monitors.size() + " connections");
+			System.out.println("HB connection monitor starting, node has " + monitors.size() + " connections");
 
 		while (forever) {
 			try {
@@ -88,7 +88,7 @@ public class HeartbeatConnector extends Thread {
 				for (HeartMonitor hb : monitors) {
 					if (!hb.isConnected()) {
 						try {
-							logger.info("attempting to connect to node: " + hb.getNodeInfo());
+							System.out.println("attempting to connect to node: " + hb.getNodeInfo());
 							hb.initiateHeartbeat();
 						} catch (Exception ie) {
 							// do nothing
@@ -100,7 +100,7 @@ public class HeartbeatConnector extends Thread {
 				break;
 			}
 		}
-		logger.info("ending hbMgr connection monitoring thread");
+		System.out.println("ending hbMgr connection monitoring thread");
 	}
 
 	private void validateConnection() {

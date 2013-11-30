@@ -30,6 +30,7 @@ public class ClientDecoderPipeline implements ChannelPipelineFactory {
 	}
 
 	public void addListener(ClientListener listener) {
+		System.out.println("adding listener to the client handler  ------ ClientDecoderPipeline");
 		handler.addListener(listener);
 	}
 

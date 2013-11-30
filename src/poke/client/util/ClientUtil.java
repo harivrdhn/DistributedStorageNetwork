@@ -2,7 +2,6 @@ package poke.client.util;
 
 import poke.util.PrintNode;
 import eye.Comm.Document;
-import eye.Comm.File;
 import eye.Comm.Finger;
 import eye.Comm.Header;
 import eye.Comm.NameValueSet;
@@ -15,8 +14,8 @@ public class ClientUtil {
 			return;
 		}
 
-		if (doc.hasNameSpace())
-			System.out.println("NameSpace: " + doc.getNameSpace());
+		//if (doc.hasNameSpace())
+		//	System.out.println("NameSpace: " + doc.getNameSpace());
 
 		if (doc.hasDocument()) {
 			NameValueSet nvs = doc.getDocument();
@@ -33,23 +32,50 @@ public class ClientUtil {
 		System.out.println("Poke: in clientutil " + f.getTag() + " - " + f.getNumber());
 	}
 	
-	public static void printFile(File f) {
+	/*public static void printFile(File f) {
 		if (f == null) {
 			System.out.println("finger is null");
 			return;
 		}
 
 		System.out.println("Poke: in clientutil " + f.getName());
-	}
+	}*/
+	
+	public static void printMessage(Header h, eye.Comm.PayloadReply body) {
+        System.out.println("-------------------------------------------------------");
+        System.out.println("Header");
+        System.out.println(" - Orig        : " + h.getOriginator());
+        System.out.println(" - Req ID      : " + h.getRoutingId());
+        System.out.println(" - Tag         : " + h.getTag());
+        System.out.println(" - Time        : " + h.getTime());
+        System.out.println(" - Status      : " + h.getReplyCode());
+        if (h.getReplyCode().getNumber() != eye.Comm.Header.ReplyStatus.SUCCESS_VALUE)
+            System.out.println(" - Re Msg : " + h.getReplyMsg());
+
+        System.out.println("");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("BODY");
+        if(!h.getTag().toUpperCase().equals("DOCREMOVE")){
+	        System.out.println(" - ChunkID            : " + body.getDocs(0).getChunkId());
+	        System.out.println(" - totalChunks        : " + body.getDocs(0).getTotalChunk());
+	        System.out.println(" - DOC NAME           : " + body.getDocs(0).getDocName());   
+        }
+        else{
+	        System.out.println(" - DOC NAME           : " + body.getDocs(0).getDocName());        
+	        System.out.println(" - totalChunks        : " + body.getDocs(0).getTotalChunk());
+	       // System.out.println(" - ChunkContent       : " + body.getStats().getgetChunkContent());
+        }
+       
+    }
 
 	public static void printHeader(Header h) {
 		System.out.println("-------------------------------------------------------");
 		System.out.println("Header");
-		System.out.println(" - Orig   : " + h.getOriginator());
-		System.out.println(" - Req ID : " + h.getRoutingId());
-		System.out.println(" - Tag    : " + h.getTag());
-		System.out.println(" - Time   : " + h.getTime());
-		System.out.println(" - Status : " + h.getReplyCode());
+		System.out.println(" - Orig        : " + h.getOriginator());
+		System.out.println(" - Req ID      : " + h.getRoutingId());
+		System.out.println(" - Tag         : " + h.getTag());
+		System.out.println(" - Time        : " + h.getTime());
+		System.out.println(" - Status      : " + h.getReplyCode());
 		if (h.getReplyCode().getNumber() != eye.Comm.Header.ReplyStatus.SUCCESS_VALUE)
 			System.out.println(" - Re Msg : " + h.getReplyMsg());
 

@@ -25,6 +25,7 @@ import org.jboss.netty.channel.ChannelFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import poke.server.Server;
 import poke.server.conf.ServerConf.NearestConf;
 import poke.server.management.HeartbeatData.BeatStatus;
 
@@ -48,9 +49,13 @@ public class HeartbeatManager extends Thread {
 	// frequency heartbeats are checked
 	static final int sHeartRate = 5000; // msec
 
-	String nodeId;
+	public static String nodeId;
 	ManagementQueue mqueue;
 	boolean forever = true;
+	
+	public static String leadcli="";
+	static boolean broadcastreq=false;
+	static String msgpart1,msgpart2;
 
 	ConcurrentHashMap<Channel, HeartbeatData> outgoingHB = new ConcurrentHashMap<Channel, HeartbeatData>();
 	ConcurrentHashMap<String, HeartbeatData> incomingHB = new ConcurrentHashMap<String, HeartbeatData>();
@@ -136,8 +141,8 @@ public class HeartbeatManager extends Thread {
 		}
 
 		if (!incomingHB.containsKey(node.getNodeId())) {
-			logger.info("Expects to connect to node " + node.getNodeId() + " (" + node.getHost() + ", "
-					+ node.getMgmtport() + ")");
+			//System.out.println("Expects to connect to node " + node.getNodeId() + " (" + node.getHost() + ", "
+					//+ node.getMgmtport() + ")");
 
 			// ensure if we reuse node instances that it is not dirty.
 			node.clearAll();
@@ -177,7 +182,21 @@ public class HeartbeatManager extends Thread {
 	private Management generateHB() {
 		Heartbeat.Builder h = Heartbeat.newBuilder();
 		h.setTimeRef(System.currentTimeMillis());
-		h.setNodeId(nodeId);
+		//setting nodeID to implement Leader Election and Broadcast Function
+		if(Server.leaderNode.hashCode()<nodeId.hashCode())
+			Server.leaderNode=nodeId;
+		if(!leadcli.equals(""))
+			broadcast(nodeId,Integer.toString(HeartbeatListener.leadack));
+		else {
+			h.setNodeId(nodeId+"|"+Server.leaderNode);
+			//logger.info("Node set as "+nodeId+" and Leader as "+Server.leaderNode+" -Hari");
+		}
+		
+		if(broadcastreq){
+			h.setNodeId(nodeId+"|"+Server.leaderNode+"|"+msgpart1+"|"+msgpart2);
+			logger.info("Node set as "+nodeId+" and Leader as "+Server.leaderNode+" and broadcast protocol. -Hari");
+			broadcastreq=false;
+			}
 
 		Management.Builder b = Management.newBuilder();
 		b.setBeat(h.build());
@@ -185,9 +204,17 @@ public class HeartbeatManager extends Thread {
 		return b.build();
 	}
 
+	public static void broadcast(String nodeId2, String leadack) {
+		// TODO Auto-generated method stub
+		broadcastreq=true;
+		msgpart1=nodeId2;
+		msgpart2=leadack;
+		
+	}
+
 	@Override
 	public void run() {
-		logger.info("starting HB manager");
+		//System.out.println("starting HB manager");
 
 		while (forever) {
 			try {
@@ -212,14 +239,14 @@ public class HeartbeatManager extends Thread {
 							hd.channel.write(msg, hd.sa);
 							hd.setLastBeatSent(System.currentTimeMillis());
 							hd.setFailuresOnSend(0);
-							logger.info("beat sent to: " + hd.getNodeId() + " at " + hd.getHost());
+							//System.out.println("beat sent to: " + hd.getNodeId() + " at " + hd.getHost());
 						} catch (Exception e) {
 							hd.incrementFailuresOnSend();
 							logger.error("Failed to send HB to " + hd.getNodeId() + " at " + hd.getHost(), e);
 						}
 					}
 				} else
-					; // logger.info("No nodes to send HB");
+					; // System.out.println("No nodes to send HB");
 			} catch (InterruptedException ie) {
 				break;
 			} catch (Exception e) {
@@ -229,9 +256,9 @@ public class HeartbeatManager extends Thread {
 		}
 
 		if (!forever)
-			logger.info("management outbound queue closing");
+			System.out.println("management outbound queue closing");
 		else
-			logger.info("unexpected closing of HB manager");
+			System.out.println("unexpected closing of HB manager");
 
 	}
 

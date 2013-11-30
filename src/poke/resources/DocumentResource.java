@@ -26,5 +26,10 @@ public class DocumentResource implements Resource {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public Response process(Response response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

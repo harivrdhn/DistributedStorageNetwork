@@ -29,7 +29,7 @@ public class ManagementHandler extends SimpleChannelUpstreamHandler {
 	protected static Logger logger = LoggerFactory.getLogger("management");
 
 	public ManagementHandler() {
-		// logger.info("** HeartbeatHandler created **");
+		// System.out.println("** HeartbeatHandler created **");
 	}
 
 	/**
@@ -38,18 +38,20 @@ public class ManagementHandler extends SimpleChannelUpstreamHandler {
 	 * @param msg
 	 */
 	public void handleMessage(eye.Comm.Management req, Channel channel) {
+		System.out.println("In ManagementHandler handleMessage function");
 		if (req == null) {
 			logger.error("ERROR: Unexpected content - null");
 			return;
 		}
 
-		logger.info("ManagementHandler got messsage");
+		System.out.println("ManagementHandler got messsage");
 		// ManagementQueue.enqueueRequest(req, channel);
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-		logger.info("message rcv: " + e.getRemoteAddress());
+		System.out.println("In ManagementHandler messageReceived function");
+		System.out.println("message rcv: " + e.getRemoteAddress());
 		ManagementQueue.enqueueRequest((eye.Comm.Management) e.getMessage(),
 				e.getChannel(), e.getRemoteAddress());
 

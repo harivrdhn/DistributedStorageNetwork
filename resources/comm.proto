@@ -58,6 +58,7 @@ message Header {
     required string originator = 2;
     optional string tag = 3;
     optional int64 time = 4;
+
     
     // while we can use extensions, it is not a clean 
     // inheritance implementation and since requests
@@ -72,6 +73,8 @@ message Header {
     // if the message is for a specific node, this will be set
     optional string toNode = 8;
     optional int64 remainingHopCount = 9;
+    optional bool isExternal = 10 [default = false];
+    optional string correlationId = 11;
 
     enum Routing {
         FINGER = 2;
@@ -85,6 +88,7 @@ message Header {
         DOCUPDATE = 22;
         DOCREMOVE = 23;
         DOCADDHANDSHAKE = 24;
+        DOCQUERY = 25;
         }
         
      enum ReplyStatus {
@@ -141,5 +145,5 @@ message Network {
 message Management {
 	optional Network graph = 1;
 	optional Heartbeat beat = 2;
+        optional bool isExternal = 3 [default = false];
 }	
-

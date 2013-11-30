@@ -15,15 +15,13 @@
  */
 package poke.server.resources;
 
-import java.util.List;
-
-import poke.server.conf.ServerConf;
+import eye.Comm.Document;
 import eye.Comm.Header;
 import eye.Comm.Header.ReplyStatus;
 import eye.Comm.Header.Routing;
+import eye.Comm.Payload;
 import eye.Comm.Request;
 import eye.Comm.Response;
-import eye.Comm.RoutingPath;
 
 public class ResourceUtil {
 
@@ -37,26 +35,50 @@ public class ResourceUtil {
 	 *            The server's configuration
 	 * @return The request with this server added to the routing path or null
 	 */
-	public static Request buildForwardMessage(Request req, ServerConf cfg) {
-
-		String iam = cfg.getServer().getProperty("node.id");
-		List<RoutingPath> paths = req.getHeader().getPathList();
-		if (paths != null) {
-			// if this server has already seen this message return null
-			for (RoutingPath rp : paths) {
-				if (iam.equalsIgnoreCase(rp.getNode()))
-					return null;
-			}
-		}
+public static Request buildForwardMessage(Request req, String originator, String destination) {
 		
-		Request.Builder bldr = Request.newBuilder(req);
-		Header.Builder hbldr = bldr.getHeaderBuilder();
-		RoutingPath.Builder rpb = RoutingPath.newBuilder();
-		rpb.setNode(iam);
-		rpb.setTime(System.currentTimeMillis());
-		hbldr.addPath(rpb.build());
+		Request.Builder bldr  = null;
+			
+		try {
+				
+				bldr = Request.newBuilder(req);
+				
+				Document.Builder doc = eye.Comm.Document.newBuilder();
+				doc.setDocName(req.getBody().getDoc().getDocName());
+				
+				eye.Comm.Payload.Builder p = Payload.newBuilder();	
+				p.setDoc(doc);
+				bldr.setBody(p.build());
+				
+				Header.Builder hbldr = bldr.getHeaderBuilder();
+				hbldr.setOriginator(originator);
+				hbldr.setTag(req.getHeader().getTag());
+				hbldr.setTime(System.currentTimeMillis());
+				hbldr.setRoutingId(eye.Comm.Header.Routing.DOCFIND);
+				hbldr.setToNode(destination);  //toNOde in protobuff
+	
+				if(hbldr.hasRemainingHopCount())
+				{
+					
+					hbldr.setRemainingHopCount(hbldr.getRemainingHopCount()-1);
+					System.out.println(" &&&&  "+ hbldr.getOriginator() + ".... Current hop count"+ hbldr.getRemainingHopCount());
+				}
+				else
+				{
+					System.out.println(" &&&&  "+ hbldr.getOriginator() + ".... setting hop count 1 ");
+					hbldr.setRemainingHopCount(1);  // THis is the call from client - server  ...This is max hop count to be used
+				}
+				bldr.setHeader(hbldr.build());
+			//}
+			
+		} /*catch (SQLException e) {
+			e.printStackTrace();
+		}*/
+		catch(Exception e){
+			e.printStackTrace();
+		}
 
-		return bldr.build();
+		return bldr.build();		
 	}
 
 	/**

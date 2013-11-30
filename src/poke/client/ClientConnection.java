@@ -13,12 +13,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
+// CODE CHANGES BY PADMAJA
+
 package poke.client;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -29,11 +37,13 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 
-import eye.Comm.File;
+import eye.Comm.Document;
 import eye.Comm.Finger;
 import eye.Comm.Header;
+import eye.Comm.NameSpace;
 import eye.Comm.Payload;
 import eye.Comm.Request;
 
@@ -45,6 +55,7 @@ import eye.Comm.Request;
  */
 public class ClientConnection {
 	protected static Logger logger = LoggerFactory.getLogger("client");
+	static ArrayList<byte[]> chunkArray = new ArrayList<byte[]>();
 
 	private String host;
 	private int port;
@@ -119,20 +130,217 @@ public class ClientConnection {
 		}
 	}
 	
-	public void fileTransfer(FileInputStream input) {
-		File.Builder fileBuilder = File.newBuilder();
-	    try {
-			fileBuilder.mergeFrom(input);
-			File fb = fileBuilder.build();
-			try {
-				outbound.put(fb);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+public void fileTransfer(String inputFilePath,String tag) {
+		
+		//  File Chunk
+		InputStream fileReader = null;
+		int chunk_size = 1024;
+		byte[] chunk = null;
+		int totalBytesRead = 0;
+		int chunkID = 0;
+		int bytesRead =0;
+		File inputFile  = null;		 
+		int id = 0;	
+		String nameSpace = "";
+		id = inputFilePath.lastIndexOf('/');
+		if(id == -1)
+			id = inputFilePath.lastIndexOf('\\');			
+		
+		if(id == -1 || id == 0 )
+			nameSpace = "/home/sandeep/Documents/275";
+		else	
+			nameSpace = inputFilePath.substring(0,id);
+		
+		String fileName = inputFilePath.substring(id+1, inputFilePath.length());
+		System.out.println("NAMESPACE = "+ nameSpace + "  FILENAME = "+fileName);
+		
+		String filePath = nameSpace+"/"+fileName;
+		while(true){
+			try{
+				inputFile = new File(filePath);
+			
+			fileReader = new BufferedInputStream( new FileInputStream(inputFile));
+			} catch (FileNotFoundException FNF) {
+				logger.warn(" -- FILE NOT FOUND EXCEPTIOn");break;
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			 int file_size = (int) inputFile.length();
+			 int number_of_chunks = 0;
+			 
+			 System.out.println("input file length  "+inputFile.length());
+			 
+			 for(int i=4;;i++){
+				 chunk_size = file_size/i;
+				 if(chunk_size< 64*1024*700){
+					 number_of_chunks = i+1;
+					 break;
+				 }				 
+			 }
+			  
+			 while ( totalBytesRead < file_size ){			    
+			     int bytesRemaining = file_size-totalBytesRead;
+			     if ( bytesRemaining < chunk_size )
+			    	 chunk_size = bytesRemaining;			      
+			     chunk = new byte[chunk_size]; //Temporary Byte Array
+			    try{
+			    	
+				    bytesRead = fileReader.read(chunk, 0, chunk_size);
+				     
+				     if ( bytesRead > 0) // If bytes read is not empty
+				     {
+				      totalBytesRead += bytesRead;
+				      chunkID++;
+				     }
+			    } catch (IOException e) {
+					logger.error("UNABLE TO READ FILE");
+			    }
+			    
+			    System.out.println("BYTES  "+chunk);
+			    System.out.println("***********************************   chunk size  "+chunk_size +  "   "+ bytesRead );
+			    System.out.println("**************     CHUNKID  "+chunkID + "  No of chunks  "+ number_of_chunks );
+			     
+				// data to send
+				Finger.Builder f = eye.Comm.Finger.newBuilder();
+				f.setTag(tag);
+		
+				Document.Builder doc = eye.Comm.Document.newBuilder();				
+				
+				doc.setChunkContent(ByteString.copyFrom(chunk));
+				doc.setChunkId(chunkID);
+				doc.setDocName(fileName);
+				doc.setDocSize(file_size);
+				doc.setTotalChunk(number_of_chunks);
+				
+				// payload containing data
+				Request.Builder r = Request.newBuilder();
+				eye.Comm.Payload.Builder p = Payload.newBuilder();
+				
+				NameSpace.Builder ns = NameSpace.newBuilder();
+				ns.setName(nameSpace);
+				p.setSpace(ns);
+				p.setDoc(doc);
+				r.setBody(p.build());
+				
+				// header with routing info
+				eye.Comm.Header.Builder h = Header.newBuilder();
+				h.setOriginator("zero");
+				h.setTag(tag);
+				h.setTime(System.currentTimeMillis());
+				h.setRoutingId(eye.Comm.Header.Routing.DOCADD);
+				r.setHeader(h.build());
+
+				eye.Comm.Request req = r.build();
+
+				try {
+					// enqueue message
+					outbound.put(req);
+				} catch (InterruptedException e) {
+					logger.warn("Unable to deliver message, queuing");
+				}
+			}	
+			 if(chunkID == number_of_chunks)
+				 break;
+		}
+	}
+	
+	public void fileFind(String docPath,String tag) {
+		// data to send
+		String nameSpace = "";
+		int id = docPath.lastIndexOf('/');
+		if(id == -1)
+			id = docPath.lastIndexOf('\\');			
+		
+		if(id == -1 || id == 0 )
+			nameSpace = "/home/sandeep/Documents/275";
+		else	
+			nameSpace = docPath.substring(0,id);
+		
+		String fileName = docPath.substring(id+1, docPath.length());
+		System.out.println("NAMESPACE = "+ nameSpace + "  FILENAME = "+fileName);
+		
+		docPath = nameSpace+"/"+fileName;
+		
+		Finger.Builder f = eye.Comm.Finger.newBuilder();
+		f.setTag(tag);
+
+		Document.Builder doc = eye.Comm.Document.newBuilder();
+		doc.setDocName(fileName);
+		
+		// payload containing data
+		Request.Builder r = Request.newBuilder();
+		eye.Comm.Payload.Builder p = Payload.newBuilder();
+		
+		NameSpace.Builder ns = NameSpace.newBuilder();
+		ns.setName(nameSpace);
+		p.setSpace(ns);
+		
+		p.setDoc(doc);
+		r.setBody(p.build());
+		
+		// header with routing info
+		eye.Comm.Header.Builder h = Header.newBuilder();
+		h.setOriginator("zero");
+		h.setTag(tag);
+		h.setTime(System.currentTimeMillis());
+		h.setRoutingId(eye.Comm.Header.Routing.DOCFIND);
+		r.setHeader(h.build());
+
+		eye.Comm.Request req = r.build();
+
+		try {
+			// enqueue message
+			outbound.put(req);
+		} catch (InterruptedException e) {
+			logger.warn("Unable to deliver message, queuing");
+	}
+	}
+	
+	public void fileRemove(String docPath,String tag) {
+		// data to send
+		String nameSpace = "";
+		int id = docPath.lastIndexOf('/');
+		if(id == -1)
+			id = docPath.lastIndexOf('\\');			
+		
+		if(id == -1 || id == 0 )
+			nameSpace = "/home/sandeep/Documents/275";
+		else	
+			nameSpace = docPath.substring(0,id);
+		
+		String fileName = docPath.substring(id+1, docPath.length());
+		System.out.println("NAMESPACE = "+ nameSpace + "  FILENAME = "+fileName);
+		
+		docPath = nameSpace+"/"+fileName;
+						
+		Finger.Builder f = eye.Comm.Finger.newBuilder();
+		f.setTag(tag);
+
+		Document.Builder doc = eye.Comm.Document.newBuilder();
+		doc.setDocName(fileName);
+		
+		// payload containing data
+		Request.Builder r = Request.newBuilder();
+		eye.Comm.Payload.Builder p = Payload.newBuilder();
+				
+		NameSpace.Builder ns = NameSpace.newBuilder();
+		ns.setName(nameSpace);
+		p.setSpace(ns);
+		p.setDoc(doc);
+		r.setBody(p.build());
+		// header with routing info
+		eye.Comm.Header.Builder h = Header.newBuilder();
+		h.setOriginator("zero");
+		h.setTag(tag);
+		h.setTime(System.currentTimeMillis());
+		h.setRoutingId(eye.Comm.Header.Routing.DOCREMOVE);
+		r.setHeader(h.build());
+
+		eye.Comm.Request req = r.build();
+
+		try {
+			// enqueue message
+			outbound.put(req);
+		} catch (InterruptedException e) {
+			logger.warn("Unable to deliver message, queuing");
 		}
 	}
 	
@@ -165,7 +373,7 @@ public class ClientConnection {
 	protected Channel connect() {
 		// Start the connection attempt.
 		if (channel == null) {
-			// System.out.println("---> connecting");
+			System.out.println("---> CHANNEL connecting");
 			channel = bootstrap.connect(new InetSocketAddress(host, port));
 
 			// cleanup on lost connection
@@ -208,28 +416,40 @@ public class ClientConnection {
 			}
 
 			while (true) {
+				System.out.println("&&&&&&&&&&  IN BLOCKED WAITING WHILE &&&&&& ");
 				if (!forever && conn.outbound.size() == 0)
+				{
+					System.out.println("%%%%%%%%%%%%%  in OutboundWorker break loop %%%%%%%%%");
 					break;
-
+				}
 				try {
 					// block until a message is enqueued
 					GeneratedMessage msg = conn.outbound.take();
+					System.out.println("&&&&&&&& INBOUND MESSAGE AFTER BLOCKED WAITING ");
 					if (ch.isWritable()) {
+						System.out.println("&&&&&&& Channel writable");
 						ClientHandler handler = conn.connect().getPipeline().get(ClientHandler.class);
 
-						if (!handler.send(msg))
+						if (!handler.send(msg)){
+							System.out.println(" &&&&& NOT ABLE TO SEND MESSAGE HABDLER");
 							conn.outbound.putFirst(msg);
+						}
 
-					} else
+					} else{
+						System.out.println("&&&&&&&&& Non writable channel ");
 						conn.outbound.putFirst(msg);
+					}
+						
+					System.out.println("&&&&&&&&&&  OUT OF BLOCKED WAITING WHILE &&&&&& ");
 				} catch (InterruptedException ie) {
+					System.out.println(" &&&&&&&& INTERRUPTED EXCEPTION AT MEASSAGE ENQUUE -- clientConnection.jaava");
 					break;
 				} catch (Exception e) {
 					ClientConnection.logger.error("Unexpected communcation failure", e);
 					break;
 				}
 			}
-
+			System.out.println("&&&&&&&&&&  EXIT BLOCKED WAITING WHILE &&&&&& ");
 			if (!forever) {
 				ClientConnection.logger.info("connection queue closing");
 			}

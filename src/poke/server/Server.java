@@ -19,6 +19,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.InetSocketAddress;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,10 +43,12 @@ import poke.server.conf.ServerConf;
 import poke.server.management.HeartbeatData;
 import poke.server.management.HeartbeatConnector;
 import poke.server.management.HeartbeatManager;
+import poke.server.management.Leader;
 import poke.server.management.ManagementDecoderPipeline;
 import poke.server.management.ManagementQueue;
 import poke.server.resources.ResourceFactory;
 import poke.server.routing.ServerDecoderPipeline;
+import poke.server.storage.jdbc.DatabaseStorage;
 
 /**
  * Note high surges of messages can close down the channel if the handler cannot
@@ -60,13 +64,17 @@ import poke.server.routing.ServerDecoderPipeline;
  */
 public class Server {
 	protected static Logger logger = LoggerFactory.getLogger("server");
+	public static DatabaseStorage databaseStorage = new DatabaseStorage();
 
 	protected static final ChannelGroup allChannels = new DefaultChannelGroup("server");
 	protected static HashMap<Integer, Bootstrap> bootstrap = new HashMap<Integer, Bootstrap>();
 	protected ChannelFactory cf, mgmtCF;
 	protected ServerConf conf;
 	protected HeartbeatManager hbMgr;
-
+	public static ArrayList<NodeDesc> pathsBC = new ArrayList<NodeDesc>();
+	public static String leaderNode="";
+	public static boolean leadalive=false;
+	
 	/**
 	 * static because we need to get a handle to the factory from the shutdown
 	 * resource
@@ -80,7 +88,7 @@ public class Server {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		logger.info("Server shutdown");
+		System.out.println("Server shutdown");
 		System.exit(0);
 	}
 
@@ -104,7 +112,7 @@ public class Server {
 			ResourceFactory.initialize(conf);
 		} catch (Exception e) {
 		}
-
+		storeNearestNodes();
 		// communication - external (TCP) using asynchronous communication
 		cf = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
@@ -151,9 +159,21 @@ public class Server {
 
 		// We can also accept connections from a other ports (e.g., isolate read
 		// and writes)
-		logger.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ public network");
-		logger.info("Starting server, listening on port = " + port);
+		System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ public network");
+		System.out.println("Starting server, listening on port = " + port);
 	}
+	
+	// Copy all the nearest nodes in an array list 
+	
+		private ArrayList<NodeDesc> storeNearestNodes() {		
+			for(int  i=0;i<conf.getNearest().getNearestNodes().values().size();i++)
+			{			
+				NodeDesc nd = conf.getNearest().getNearestNodes().values().iterator().next();
+				pathsBC.add(nd);
+				System.out.println("********  BroadCast NodeDesc  "+ nd.getNodeId());
+			} 
+			return pathsBC;
+		}
 
 	/**
 	 * initialize the private network/interface
@@ -184,9 +204,9 @@ public class Server {
 		Channel ch = bs.bind(new InetSocketAddress(port));
 		allChannels.add(ch);
 		
-		logger.info("********************************************* private network");
+		System.out.println("********************************************* private network");
 
-		logger.info("Starting server, listening on port = " + port);
+		System.out.println("Starting server, listening on port = " + port);
 	}
 
 	/**
@@ -208,6 +228,7 @@ public class Server {
 
 		// storage initialization
 		// TODO storage setup (e.g., connection to a database)
+		
 
 		// start communication
 		createPublicBoot(port);
@@ -229,7 +250,15 @@ public class Server {
 		HeartbeatConnector conn = HeartbeatConnector.getInstance();
 		conn.start();
 
-		logger.info("Server ready");
+		System.out.println("Server ready");
+		
+		while(!leadalive){
+			if(leaderNode==conf.getServer().getProperty("node.id")){
+				Leader lead=new Leader();
+				lead.run();
+				leadalive=true;
+			}
+		}
 	}
 
 	/**

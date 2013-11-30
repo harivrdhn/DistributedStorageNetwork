@@ -19,11 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import poke.monitor.MonitorListener;
+import poke.server.Server;
 
 public class HeartbeatListener implements MonitorListener {
-	protected static Logger logger = LoggerFactory.getLogger("management");
+	protected static Logger logger = LoggerFactory.getLogger("management *******************monitor *********** HEART-BEAT-LISTENER");
 
 	private HeartbeatData data;
+	
+	public static int leadack=0;
 
 	public HeartbeatListener(HeartbeatData data) {
 		this.data = data;
@@ -50,16 +53,39 @@ public class HeartbeatListener implements MonitorListener {
 	 */
 	@Override
 	public void onMessage(eye.Comm.Management msg) {
+		String nodes[]=msg.getBeat().getNodeId().split("[|]+");
+		if(nodes.length>2){
+		if(nodes[2].equals(HeartbeatManager.nodeId)){
+			leadack=Integer.parseInt(nodes[3]);
+		} else
+			HeartbeatManager.broadcast(nodes[2], nodes[3]);
+		
+		if(Server.leaderNode==HeartbeatManager.nodeId){
+			Leader.updateQueue(nodes[2]);
+		}
+		
+		}
+		
 		if (logger.isDebugEnabled())
 			logger.debug(msg.getBeat().getNodeId());
 
 		if (msg.hasGraph()) {
 			logger.info("Received graph responses");
-		} else if (msg.hasBeat() && msg.getBeat().getNodeId().equals(data.getNodeId())) {
-			logger.info("Received HB response from " + msg.getBeat().getNodeId());
+		} else if (msg.hasBeat() && nodes[0].equals(data.getNodeId())) {
+			logger.info("Received HB response from " + nodes[0]);
+			
+			if(nodes[1].hashCode()>HeartbeatManager.nodeId.hashCode())
+				Server.leaderNode=nodes[1];
+			else
+				Server.leaderNode=HeartbeatManager.nodeId;
+			//logger.info("Leader is set to "+Server.leaderNode+" -Hari");
+		
 			data.setLastBeat(System.currentTimeMillis());
 		} else
 			logger.error("Received hbMgr from on wrong channel or unknown host: " + msg.getBeat().getNodeId());
+		
+		
+		
 	}
 
 	@Override

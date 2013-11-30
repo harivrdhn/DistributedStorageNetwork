@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import eye.Comm.Management;
 
 public class HeartPrintListener implements MonitorListener {
-	protected static Logger logger = LoggerFactory.getLogger("monitor");
+	protected static Logger logger = LoggerFactory.getLogger("*******************monitor *********** HEART-PRINT-LISTENER");
 
 	private String nodeID;
 
@@ -25,9 +25,9 @@ public class HeartPrintListener implements MonitorListener {
 			logger.debug(msg.getBeat().getNodeId());
 
 		if (msg.hasGraph()) {
-			logger.info("Received graph responses from " + msg.getBeat().getNodeId());
+			//System.out.println("Received graph responses from " + msg.getBeat().getNodeId());
 		} else if (msg.hasBeat()) {
-			logger.info("Received HB response: " + msg.getBeat().getNodeId());
+			//System.out.println("Received HB response: " + msg.getBeat().getNodeId());
 		} else
 			logger.error("Received management response from unexpected host: " + msg.getBeat().getNodeId());
 	}
@@ -39,7 +39,7 @@ public class HeartPrintListener implements MonitorListener {
 
 	@Override
 	public void connectionReady() {
-		logger.info("Management port is ready to receive messages");
+		System.out.println("Management port is ready to receive messages");
 	}
 
 }
