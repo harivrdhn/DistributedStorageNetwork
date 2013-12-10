@@ -1,0 +1,25 @@
+This project offers different server configurations to form Storage Network. It uses netty and protobuf for the communication between servers and the clients.
+
+It's main features are Leader Election and Data Chunking for addition and storage.
+
+It can be run either on Unix or on Windows.
+
+UNIX:
+
+1. Open terminal
+2. Go to runtime
+3. Go to whichever configuration you want to run (ring, line or diamond)
+4. Run the shell script with the proper .conf file as argument.
+5. Run the required number of servers until it is completely connected.
+6. Open another terminal and go to /classes/poke/demo
+7. Run the Jab file.
+
+Windows:
+
+1. Open terminal
+2. Go to runtime
+3. Go to whichever configuration you want to run (ring, line or diamond)
+4. Run the batch script with the proper .conf file as argument.
+5. Run the required number of servers until it is completely connected.
+6. Open another terminal and go to /classes/poke/demo
+7. Run the Jab file.
